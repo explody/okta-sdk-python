@@ -33,7 +33,8 @@ class NetworkZoneClient(APIClient):
         self._base_url = ""
 
     async def list_network_zones(
-            self, query_params={}
+            self, query_params={},
+            keep_empty_params=False
     ):
         """
         Enumerates network zones added to your organization wit
@@ -60,7 +61,7 @@ class NetworkZoneClient(APIClient):
         headers = {}
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
@@ -83,7 +84,8 @@ class NetworkZoneClient(APIClient):
         return (result, response, None)
 
     async def create_network_zone(
-            self, network_zone
+            self, network_zone,
+            keep_empty_params=False
     ):
         """
         Adds a new network zone to your Okta organization.
@@ -108,7 +110,7 @@ class NetworkZoneClient(APIClient):
         }
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
@@ -129,7 +131,8 @@ class NetworkZoneClient(APIClient):
         return (result, response, None)
 
     async def delete_network_zone(
-            self, zoneId
+            self, zoneId,
+            keep_empty_params=False
     ):
         """
         Removes network zone.
@@ -146,7 +149,7 @@ class NetworkZoneClient(APIClient):
         headers = {}
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
@@ -161,7 +164,8 @@ class NetworkZoneClient(APIClient):
         return (response, None)
 
     async def get_network_zone(
-            self, zoneId
+            self, zoneId,
+            keep_empty_params=False
     ):
         """
         Fetches a network zone from your Okta organization by `
@@ -181,7 +185,7 @@ class NetworkZoneClient(APIClient):
         headers = {}
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
@@ -202,7 +206,8 @@ class NetworkZoneClient(APIClient):
         return (result, response, None)
 
     async def update_network_zone(
-            self, zoneId, network_zone
+            self, zoneId, network_zone,
+            keep_empty_params=False
     ):
         """
         Updates a network zone in your organization.
@@ -228,7 +233,7 @@ class NetworkZoneClient(APIClient):
         }
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
@@ -249,12 +254,15 @@ class NetworkZoneClient(APIClient):
         return (result, response, None)
 
     async def activate_network_zone(
-            self, zoneId
+            self, zoneId,
+            keep_empty_params=False
     ):
         """
         Activate Network Zone
         Args:
             zone_id {str}
+        Returns:
+            NetworkZone
         """
         http_method = "post".upper()
         api_url = format_url(f"""
@@ -266,27 +274,36 @@ class NetworkZoneClient(APIClient):
         headers = {}
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
-            return (None, error)
+            return (None, None, error)
 
         response, error = await self._request_executor\
-            .execute(request)
+            .execute(request, NetworkZone)
 
         if error:
-            return (response, error)
+            return (None, response, error)
 
-        return (response, None)
+        try:
+            result = NetworkZone(
+                self.form_response_body(response.get_body())
+            )
+        except Exception as error:
+            return (None, response, error)
+        return (result, response, None)
 
     async def deactivate_network_zone(
-            self, zoneId
+            self, zoneId,
+            keep_empty_params=False
     ):
         """
         Deactivates a network zone.
         Args:
             zone_id {str}
+        Returns:
+            NetworkZone
         """
         http_method = "post".upper()
         api_url = format_url(f"""
@@ -298,16 +315,22 @@ class NetworkZoneClient(APIClient):
         headers = {}
 
         request, error = await self._request_executor.create_request(
-            http_method, api_url, body, headers
+            http_method, api_url, body, headers, keep_empty_params=keep_empty_params
         )
 
         if error:
-            return (None, error)
+            return (None, None, error)
 
         response, error = await self._request_executor\
-            .execute(request)
+            .execute(request, NetworkZone)
 
         if error:
-            return (response, error)
+            return (None, response, error)
 
-        return (response, None)
+        try:
+            result = NetworkZone(
+                self.form_response_body(response.get_body())
+            )
+        except Exception as error:
+            return (None, response, error)
+        return (result, response, None)

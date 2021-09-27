@@ -1,5 +1,83 @@
 # Okta Python SDK Changelog
 
+## v2.1.0
+- Regenerate code using the [open API spec v2.6.0](https://github.com/okta/okta-management-openapi-spec/releases/tag/openapi-2.6.0).
+- Expose parameter `keep_empty_params` to all user interfaces.
+
+_New models:_
+* ApplicationSettingsNotes
+* SignOnInlineHook
+* TokenAuthorizationServerPolicyRuleActionInlineHook
+
+## v2.0.0
+- Regenerate code using the [open API spec v2.5.0](https://github.com/okta/okta-management-openapi-spec/releases/tag/openapi-2.5.0).
+- Make sign_on_mode of all apps instance of enum, issue #198 (this change might be not compatible with custom clients code, although probability is low)
+- Add response headers to OktaAPIResponse object, issue #218
+
+_New resources:_
+* Domain
+* UserSchema
+
+_New models:_
+* DnsRecord
+* DnsRecordType
+* Domain
+* DomainCertificate
+* DomainCertificateMetadata
+* DomainCertificateSourceType
+* DomainCertificateType
+* DomainListResponse
+* DomainValidationStatus
+* UserSchemaAttributeEnum
+* UserSchemaAttributeItems
+* UserSchemaAttributeMasterPriority
+* UserSchemaAttributeMasterType
+* UserSchemaAttributeScope
+* UserSchemaAttributeType
+* UserSchemaAttributeUnion
+* UserSchemaProperties
+* UserSchemaPropertiesProfile
+* UserSchemaPropertiesProfileItem
+
+### Breaking changes
+Previously, the type of `sign_on_mode` attribute was inconsistent among different applications. While some applications, including the generic application, defined this attribute as string, others defined it as `ApplicationSignOnMode`.
+
+We have now standardized the sign_on_mode attribute making its type an ApplicationSignOnMode. Thus, code like the following, which was working previously, won't provide desired result:
+
+```py
+# if sign_on_mode is not an ApplicationSignOnMode type, then it should be string; but now all sign_on_modes are of type ApplicationSignOnMode
+if not isinstance(app.sign_on_mode, ApplicationSignOnMode):
+    do_some_stuff()
+```
+
+## v1.7.0
+- Regenerate code using the [open API spec v2.4.0](https://github.com/okta/okta-management-openapi-spec/releases/tag/openapi-2.4.0).
+- Fix case issue with user custom attributes, issue #202.
+- Fix UserProfile serializing, PR #207.
+- Fix inconsistent responses within pagination, issue #210.
+
+_New resources:_
+* ThreatInsight
+* NetworkZone
+* ProfileMapping
+
+_New models:_
+* NetworkZone
+* NetworkZoneAddress
+* NetworkZoneAddressType
+* NetworkZoneLocation
+* NetworkZoneStatus
+* NetworkZoneType
+* NetworkZoneUsage
+* PolicyRuleActions
+* PolicyRuleActionsEnroll
+* PolicyRuleActionsEnrollSelf
+* ProfileMapping
+* ProfileMappingProperty
+* ProfileMappingPropertyPushStatus
+* ProfileMappingSource
+* ThreatInsightConfiguration
+
 ## v1.6.0
 - Update SDK according to openapi spec v2.3.0.
 - Fix custom user attributes.
